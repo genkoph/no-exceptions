@@ -1,0 +1,44 @@
+{
+  "name": "no-exceptions",
+  "version": "0.0.0",
+  "license": "MIT",
+  "main": "./build/index.js",
+  "module": "./build/index.js",
+  "types": "./build/index.d.ts",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./build/index.d.ts",
+      "import": "./build/index.js",
+      "require": "./build/index.js"
+    }
+  },
+  "files": [
+    "build"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf build",
+    "test": "vitest run --typecheck",
+    "test:watch": "vitest",
+    "format": "prettier --write .",
+    "lint": "eslint src/**"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.33.0",
+    "@types/node": "^24.2.0",
+    "eslint": "^9.33.0",
+    "eslint-config-prettier": "^10.1.8",
+    "globals": "^16.3.0",
+    "prettier": "3.6.2",
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0",
+    "typescript-eslint": "^8.39.1",
+    "vitest": "2.1.9"
+  },
+  "peerDependencies": {
+    "typescript": ">=4.9.0"
+  }
+}
