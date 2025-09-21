@@ -2,10 +2,21 @@
   "name": "no-exceptions",
   "version": "0.0.0",
   "license": "MIT",
+  "repository": {
+    "url": "https://github.com/genkoph/no-exceptions"
+  },
+  "private": false,
   "main": "./build/index.js",
   "module": "./build/index.js",
   "types": "./build/index.d.ts",
   "type": "module",
+  "keywords": [
+    "result",
+    "pattern",
+    "typescript",
+    "opinionated",
+    "minimal"
+  ],
   "exports": {
     ".": {
       "types": "./build/index.d.ts",
