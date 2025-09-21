@@ -35,7 +35,8 @@
     "test": "vitest run --typecheck",
     "test:watch": "vitest",
     "format": "prettier --write .",
-    "lint": "eslint src/**"
+    "lint": "eslint src/**",
+    "release": "changeset publish"
   },
   "devDependencies": {
     "@changesets/cli": "^2.29.7",
