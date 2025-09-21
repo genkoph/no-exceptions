@@ -382,7 +382,7 @@ describe("ensure", () => {
         { value: NaN, expected: true, description: "NaN" },
       ];
 
-      testCases.forEach(({ value, expected, description }) => {
+      testCases.forEach(({ value, expected }) => {
         const result = ensure(value);
         expect(result.isOk()).toBe(expected);
         if (result.isOk()) {
@@ -399,7 +399,7 @@ describe("ensure", () => {
         { value: Promise.resolve(NaN), expected: true, description: "NaN" },
       ];
 
-      for (const { value, expected, description } of testCases) {
+      for (const { value, expected } of testCases) {
         const result = await ensure(value);
         expect(result.isOk()).toBe(expected);
         if (result.isOk()) {
