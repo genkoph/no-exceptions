@@ -121,43 +121,58 @@ export class Ok<T = unknown, E = never> implements ResultCore<T, E> {
   andTee(fn: (value: T) => unknown): Result<T, E> {
     try {
       fn(this.value);
-    } catch {}
+    } catch {
+      /* empty */
+    }
 
     return ok(this.value);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   orMap<U>(fn: (error: E) => U): Result<T, U> {
     return ok(this.value);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   or<U, V>(fn: (error: E) => Result<U, V>): Result<T | U, V> {
     return ok(this.value);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   orTee(fn: (error: E) => unknown): Result<T, E> {
     return ok(this.value);
   }
 
   readonly async: ResultPromiseCore<T, E> = {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     orTee: (fn: (error: E) => MaybePromise<unknown>): ResultPromise<T, E> => {
       return ResultPromise.ok(this.value);
     },
+
     andTee: (fn: (value: T) => MaybePromise<unknown>): ResultPromise<T, E> => {
       try {
         fn(this.value);
-      } catch {}
+      } catch {
+        /* empty */
+      }
 
       return ResultPromise.ok(this.value);
     },
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     orMap: <U>(fn: (error: E) => MaybePromise<U>): ResultPromise<T, U> => {
       return ResultPromise.ok(this.value);
     },
+
     andMap: <U>(fn: (value: T) => MaybePromise<U>): ResultPromise<U, E> => {
       return ResultPromise.ok(fn(this.value));
     },
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     or: <U, V>(fn: (error: E) => MaybeResultPromise<U, V>): ResultPromise<T | U, V> => {
       return ResultPromise.ok(this.value);
     },
+
     and: <U, V>(fn: (value: T) => MaybeResultPromise<U, V>): ResultPromise<U, E | V> => {
       const result = fn(this.value);
 
@@ -195,19 +210,24 @@ export class Err<T = never, E = unknown> implements ResultCore<T, E> {
   orTee(fn: (error: E) => unknown): Result<T, E> {
     try {
       fn(this.error);
-    } catch {}
+    } catch {
+      /* empty */
+    }
 
     return err(this.error);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   andMap<U>(fn: (value: T) => U): Result<U, E> {
     return err(this.error);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   and<U, V>(fn: (value: T) => Result<U, V>): Result<U, E | V> {
     return err(this.error);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   andTee(fn: (value: T) => unknown): Result<T, E> {
     return err(this.error);
   }
@@ -216,18 +236,26 @@ export class Err<T = never, E = unknown> implements ResultCore<T, E> {
     orTee: (fn: (error: E) => MaybePromise<unknown>): ResultPromise<T, E> => {
       try {
         fn(this.error);
-      } catch {}
+      } catch {
+        /* empty */
+      }
       return ResultPromise.err(this.error);
     },
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     andTee: (fn: (value: T) => MaybePromise<unknown>): ResultPromise<T, E> => {
       return ResultPromise.err(this.error);
     },
+
     orMap: <U>(fn: (error: E) => MaybePromise<U>): ResultPromise<T, U> => {
       return ResultPromise.err(fn(this.error));
     },
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     andMap: <U>(fn: (value: T) => MaybePromise<U>): ResultPromise<U, E> => {
       return ResultPromise.err(this.error);
     },
+
     or: <U, V>(fn: (error: E) => MaybeResultPromise<U, V>): ResultPromise<T | U, V> => {
       const result = fn(this.error);
 
@@ -237,6 +265,8 @@ export class Err<T = never, E = unknown> implements ResultCore<T, E> {
 
       return ResultPromise.from(result);
     },
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     and: <U, V>(fn: (value: T) => MaybeResultPromise<U, V>): ResultPromise<U, E | V> => {
       return ResultPromise.err(this.error);
     },
@@ -317,7 +347,9 @@ export class ResultPromise<T, E> implements ResultPromiseCore<T, E>, PromiseLike
 
         try {
           await fn(result.error);
-        } catch {}
+        } catch {
+          /* empty */
+        }
 
         return err(result.error);
       }),
@@ -333,7 +365,9 @@ export class ResultPromise<T, E> implements ResultPromiseCore<T, E>, PromiseLike
 
         try {
           await fn(result.value);
-        } catch {}
+        } catch {
+          /* empty */
+        }
 
         return ok(result.value);
       }),

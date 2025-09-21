@@ -290,7 +290,6 @@ describe("attempt", () => {
     it("should handle functions with parameters as executors", async () => {
       const executorWithParams = (
         resolve: (value: string) => void,
-        reject: (error: unknown) => void,
       ) => {
         resolve("executor with params");
       };

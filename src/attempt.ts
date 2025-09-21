@@ -46,25 +46,21 @@ export function attempt<T>(executor: Executor<T>): ResultPromise<T, Error>;
 export function attempt<T>(promise: Promise<T>): ResultPromise<T, Error>;
 
 export function attempt(
-  operation: SyncThunk | AsyncThunk | Executor | Promise<unknown>,
+  operation: Thunk | Executor | Promise<unknown>,
 ): Result<unknown, unknown> | ResultPromise<unknown, unknown> {
   if (operation instanceof Promise) {
     return ResultPromise.from(operation.then(handleValue).catch(handleError));
   }
 
-  const type = operation.constructor.name;
-  const argsLength = operation.length === 0;
-
-  const isSyncThunk = type === "Function" && argsLength;
-  const isAsyncThunk = type === "AsyncFunction" && argsLength;
-
-  if (isAsyncThunk) {
-    return ResultPromise.from((operation as AsyncThunk)().then(handleValue).catch(handleError));
-  }
-
-  if (isSyncThunk) {
+  if (operation.length === 0) {
     try {
-      return handleValue((operation as SyncThunk)());
+      const value = (operation as SyncThunk | AsyncThunk)();
+
+      if (value instanceof Promise) {
+        return ResultPromise.from(value.then(handleValue).catch(handleError));
+      }
+
+      return handleValue(value);
     } catch (error) {
       return handleError(error);
     }

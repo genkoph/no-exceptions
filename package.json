@@ -2,10 +2,21 @@
   "name": "no-exceptions",
   "version": "0.0.0",
   "license": "MIT",
+  "repository": {
+    "url": "https://github.com/genkoph/no-exceptions"
+  },
+  "private": false,
   "main": "./build/index.js",
   "module": "./build/index.js",
   "types": "./build/index.d.ts",
   "type": "module",
+  "keywords": [
+    "result",
+    "pattern",
+    "typescript",
+    "opinionated",
+    "minimal"
+  ],
   "exports": {
     ".": {
       "types": "./build/index.d.ts",
@@ -24,9 +35,11 @@
     "test": "vitest run --typecheck",
     "test:watch": "vitest",
     "format": "prettier --write .",
-    "lint": "eslint src/**"
+    "lint": "eslint src/**",
+    "release": "changeset publish"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.29.7",
     "@eslint/js": "^9.33.0",
     "@types/node": "^24.2.0",
     "eslint": "^9.33.0",
@@ -40,5 +53,6 @@
   },
   "peerDependencies": {
     "typescript": ">=4.9.0"
-  }
+  },
+  "packageManager": "pnpm@10.12.4"
 }
