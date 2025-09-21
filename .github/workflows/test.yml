@@ -1,9 +1,9 @@
 name: Test
 
 on:
-  pull_request:
   push:
-    branches: [master]
+    branches:
+      - "**"
 
 jobs:
   test:
@@ -17,7 +17,5 @@ jobs:
       - uses: pnpm/action-setup@v4
         with:
           version: 10.12.4
-      - run: pnpm install
-      - run: pnpm lint
-      - run: pnpm test
-      - run: pnpm build
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint && pnpm test && pnpm build
