@@ -4,7 +4,7 @@ A minimal, opinionated Result pattern library for TypeScript.
 
 No exceptions, just Results.
 
-> **⚠️ Early development - use at your own risk. API may change.**
+> **⚠️ Early development - use at your own risk. API may change**
 
 ## Installation
 
