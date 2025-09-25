@@ -164,7 +164,7 @@ export class Ok<T> implements ResultCore<T, never> {
   }
 
   get async() {
-    return ResultPromise.ok(this.value);
+    return ResultPromise.fromPromise(Promise.resolve(ok(this.value)));
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -217,7 +217,7 @@ export class Err<E> implements ResultCore<never, E> {
   }
 
   get async() {
-    return ResultPromise.err(this.error);
+    return ResultPromise.fromPromise(Promise.resolve(err(this.error)));
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -365,42 +365,26 @@ export class ResultPromise<R extends UnknownResult>
   }
 
   /**
-   * Creates a ResultPromise that resolves to an Ok with the given value.
-   * @param value The value to wrap in an Ok, or a Promise that resolves to a value
-   * @returns A ResultPromise that resolves to Ok<T>
-   */
-  static ok<T>(value: MaybePromise<T>): ResultPromise<Ok<T>> {
-    if (value instanceof Promise) {
-      return new ResultPromise(value.then(ok));
-    }
-
-    return new ResultPromise(Promise.resolve(ok(value)));
-  }
-
-  /**
-   * Creates a ResultPromise that resolves to an Err with the given error.
-   * @param error The error to wrap in an Err, or a Promise that resolves to an error
-   * @returns A ResultPromise that resolves to Err<E>
-   */
-  static err<E>(error: MaybePromise<E>): ResultPromise<Err<E>> {
-    if (error instanceof Promise) {
-      return new ResultPromise(error.then(err));
-    }
-
-    return new ResultPromise(Promise.resolve(err(error)));
-  }
-
-  /**
-   * Creates a ResultPromise from an existing Result or Promise that resolves to a Result.
+   * Creates a ResultPromise from a Promise that resolves to a Result.
    * @param result The Result to wrap, or a Promise that resolves to a Result
    * @returns A ResultPromise wrapping the given Result
    */
-  static from<R extends UnknownResult>(result: MaybePromise<R>): ResultPromise<R> {
-    if (result instanceof Promise) {
-      return new ResultPromise(result);
-    }
+  static fromPromise<R extends UnknownResult>(result: Promise<R>): ResultPromise<R> {
+    return new ResultPromise(result);
+  }
 
-    return new ResultPromise(Promise.resolve(result));
+  /**
+   * Creates a function that returns a ResultPromise.
+   * @param fn An async function that returns a Promise resolving to a Result
+   * @returns A new function with the same signature that returns a ResultPromise
+   */
+  static fromFunction<F extends (...args: any[]) => Promise<UnknownResult>>(
+    fn: F,
+  ): (...args: Parameters<F>) => ResultPromise<Awaited<ReturnType<F>>> {
+    // @ts-expect-error ts can't infer the types correctly
+    return (...args) => {
+      return ResultPromise.fromPromise(fn(...args));
+    };
   }
 }
 

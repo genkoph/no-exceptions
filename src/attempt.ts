@@ -74,7 +74,7 @@ export function attempt(
   operation: SyncThunk | AsyncThunk | Executor | Promise<unknown>,
 ): Result<unknown, unknown> | ResultPromise<Result<unknown, unknown>> {
   if (operation instanceof Promise) {
-    return ResultPromise.from(operation.then(handleValue).catch(handleError));
+    return ResultPromise.fromPromise(operation.then(handleValue).catch(handleError));
   }
 
   if (operation.length === 0) {
@@ -82,7 +82,7 @@ export function attempt(
       const value = (operation as SyncThunk | AsyncThunk)();
 
       if (value instanceof Promise) {
-        return ResultPromise.from(value.then(handleValue).catch(handleError));
+        return ResultPromise.fromPromise(value.then(handleValue).catch(handleError));
       }
 
       return handleValue(value);
@@ -91,5 +91,5 @@ export function attempt(
     }
   }
 
-  return ResultPromise.from(new Promise(operation).then(handleValue).catch(handleError));
+  return ResultPromise.fromPromise(new Promise(operation).then(handleValue).catch(handleError));
 }

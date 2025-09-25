@@ -187,289 +187,43 @@ describe("Result.err", () => {
   });
 });
 
-describe("ResultPromise.ok", () => {
+describe("ResultPromise.fromPromise", () => {
   describe("instantiation", () => {
-    it.each(values)("ResultPromise.Ok('%s') returns Ok with correct value", async (value) => {
-      const result = ResultPromise.ok(value);
-
-      expect(result).toBeInstanceOf(ResultPromise);
-
-      const awaited = await result;
-
-      expect(awaited).toBeInstanceOf(Ok);
-      expect(awaited.value).toEqual(value);
-    });
-  });
-
-  describe(".or", () => {
-    it.each(values)("ResultPromise.Ok('%s').or() returns original Ok unchanged", async (value) => {
-      const orFn = vitest.fn();
-      const resultPromise = ResultPromise.ok(value).or(orFn);
-
-      expect(resultPromise).toBeInstanceOf(ResultPromise);
-
-      const result = await resultPromise;
-
-      expect(result).toBeInstanceOf(Ok);
-      expect(result.value).toEqual(value);
-
-      expect(orFn).not.toBeCalled();
-    });
-  });
-
-  describe(".orMap", () => {
     it.each(values)(
-      "ResultPromise.Ok('%s').orMap() returns original Ok unchanged",
+      "ResultPromise.fromPromise('%s') returns Ok with correct value",
       async (value) => {
-        const orMapFn = vitest.fn();
-        const resultPromise = ResultPromise.ok(value).orMap(orMapFn);
+        const result = ResultPromise.fromPromise(Promise.resolve(ok(value)));
 
-        expect(resultPromise).toBeInstanceOf(ResultPromise);
+        expect(result).toBeInstanceOf(ResultPromise);
 
-        const result = await resultPromise;
+        const awaited = await result;
 
-        expect(result).toBeInstanceOf(Ok);
-        expect(result.value).toEqual(value);
-
-        expect(orMapFn).not.toBeCalled();
+        expect(awaited).toBeInstanceOf(Ok);
+        expect(awaited.value).toEqual(value);
       },
     );
-  });
 
-  describe(".orTee", () => {
     it.each(values)(
-      "ResultPromise.Ok('%s').orTee() returns original Ok unchanged",
+      "ResultPromise.fromPromise('%s') returns Err with correct value",
       async (value) => {
-        const orTeeFn = vitest.fn();
-        const resultPromise = ResultPromise.ok(value).orTee(orTeeFn);
+        const result = ResultPromise.fromPromise(Promise.resolve(err(value)));
 
-        expect(resultPromise).toBeInstanceOf(ResultPromise);
+        expect(result).toBeInstanceOf(ResultPromise);
 
-        const result = await resultPromise;
+        const awaited = await result;
 
-        expect(result).toBeInstanceOf(Ok);
-        expect(result.value).toEqual(value);
-
-        expect(orTeeFn).not.toBeCalled();
+        expect(awaited).toBeInstanceOf(Err);
+        expect(awaited.error).toEqual(value);
       },
     );
-  });
-
-  describe(".and", () => {
-    it.each(values)("ResultPromise.Ok('%s').and() applies function to value", async (value) => {
-      const resultPromise = ResultPromise.ok(value).and((x) => ok(x));
-
-      expect(resultPromise).toBeInstanceOf(ResultPromise);
-
-      const result = await resultPromise;
-
-      expect(result).toBeInstanceOf(Ok);
-      expect(result.value).toEqual(value);
-    });
-
-    it.each(values)("ResultPromise.Ok('%s').and() applies function to value", async (value) => {
-      const resultPromise = ResultPromise.ok(value).and((x) => err(x));
-
-      expect(resultPromise).toBeInstanceOf(ResultPromise);
-
-      const result = await resultPromise;
-
-      expect(result).toBeInstanceOf(Err);
-      expect(result.error).toEqual(value);
-    });
-  });
-
-  describe(".andMap", () => {
-    it.each(values)("ResultPromise.Ok('%s').andMap() applies function to value", async (value) => {
-      const resultPromise = ResultPromise.ok(value).andMap((x) => x);
-
-      expect(resultPromise).toBeInstanceOf(ResultPromise);
-
-      const result = await resultPromise;
-
-      expect(result).toBeInstanceOf(Ok);
-      expect(result.value).toEqual(value);
-    });
-  });
-
-  describe(".andTee", () => {
-    it.each(values)("ResultPromise.Ok('%s').andTee() applies function to value", async (value) => {
-      const andTeeFn = vitest.fn().mockImplementation(() => {
-        throw new Error("hi");
-      });
-
-      const resultPromise = ResultPromise.ok(value).andTee(andTeeFn);
-
-      expect(resultPromise).toBeInstanceOf(ResultPromise);
-
-      const result = await resultPromise;
-
-      expect(result).toBeInstanceOf(Ok);
-      expect(result.value).toEqual(value);
-
-      expect(andTeeFn).toBeCalledTimes(1);
-    });
-  });
-});
-
-describe("ResultPromise.err", () => {
-  describe("instantiation", () => {
-    it.each(values)("ResultPromise.Err('%s') returns Err with correct value", async (value) => {
-      const result = ResultPromise.err(value);
-
-      expect(result).toBeInstanceOf(ResultPromise);
-
-      const awaited = await result;
-
-      expect(awaited).toBeInstanceOf(Err);
-      expect(awaited.error).toEqual(value);
-    });
-  });
-
-  describe(".or", () => {
-    it.each(values)("ResultPromise.Err('%s').or() applies function to value", async (value) => {
-      const resultPromise = ResultPromise.err(value).or((x) => err(x));
-
-      expect(resultPromise).toBeInstanceOf(ResultPromise);
-
-      const result = await resultPromise;
-
-      expect(result).toBeInstanceOf(Err);
-      expect(result.error).toEqual(value);
-    });
-
-    it.each(values)("ResultPromise.Err('%s').or() applies function to value", async (value) => {
-      const resultPromise = ResultPromise.err(value).or((x) => ok(x));
-
-      expect(resultPromise).toBeInstanceOf(ResultPromise);
-
-      const result = await resultPromise;
-
-      expect(result).toBeInstanceOf(Ok);
-      expect(result.value).toEqual(value);
-    });
-  });
-
-  describe(".orMap", () => {
-    it.each(values)("ResultPromise.Err('%s').orMap() applies function to value", async (value) => {
-      const resultPromise = ResultPromise.err(value).orMap((x) => x);
-
-      expect(resultPromise).toBeInstanceOf(ResultPromise);
-
-      const result = await resultPromise;
-
-      expect(result).toBeInstanceOf(Err);
-      expect(result.error).toEqual(value);
-    });
-  });
-
-  describe(".orTee", () => {
-    it.each(values)("ResultPromise.Err('%s').orTee() applies function to value", async (value) => {
-      const orTeeFn = vitest.fn().mockImplementation(() => {
-        throw new Error("hi");
-      });
-      const resultPromise = ResultPromise.err(value).orTee(orTeeFn);
-
-      expect(resultPromise).toBeInstanceOf(ResultPromise);
-
-      const result = await resultPromise;
-
-      expect(result).toBeInstanceOf(Err);
-      expect(result.error).toEqual(value);
-
-      expect(orTeeFn).toBeCalledTimes(1);
-    });
-  });
-
-  describe(".and", () => {
-    it.each(values)(
-      "ResultPromise.Err('%s').and() returns original Err unchanged",
-      async (value) => {
-        const andFn = vitest.fn();
-        const resultPromise = ResultPromise.err(value).and(andFn);
-
-        expect(resultPromise).toBeInstanceOf(ResultPromise);
-
-        const result = await resultPromise;
-
-        expect(result).toBeInstanceOf(Err);
-        expect(result.error).toEqual(value);
-
-        expect(andFn).not.toBeCalled();
-      },
-    );
-  });
-
-  describe(".andMap", () => {
-    it.each(values)(
-      "ResultPromise.Err('%s').andMap() returns original Err unchanged",
-      async (value) => {
-        const andMapFn = vitest.fn();
-        const resultPromise = ResultPromise.err(value).andMap(andMapFn);
-
-        expect(resultPromise).toBeInstanceOf(ResultPromise);
-
-        const result = await resultPromise;
-
-        expect(result).toBeInstanceOf(Err);
-        expect(result.error).toEqual(value);
-
-        expect(andMapFn).not.toBeCalled();
-      },
-    );
-  });
-
-  describe(".andTee", () => {
-    it.each(values)(
-      "ResultPromise.Err('%s').andTee() returns original Err unchanged",
-      async (value) => {
-        const andTeeFn = vitest.fn();
-        const resultPromise = ResultPromise.err(value).andTee(andTeeFn);
-
-        expect(resultPromise).toBeInstanceOf(ResultPromise);
-
-        const result = await resultPromise;
-
-        expect(result).toBeInstanceOf(Err);
-        expect(result.error).toEqual(value);
-
-        expect(andTeeFn).not.toBeCalled();
-      },
-    );
-  });
-});
-
-describe("ResultPromise.from", () => {
-  describe("instantiation", () => {
-    it.each(values)("ResultPromise.from('%s') returns Ok with correct value", async (value) => {
-      const result = ResultPromise.from(ok(value));
-
-      expect(result).toBeInstanceOf(ResultPromise);
-
-      const awaited = await result;
-
-      expect(awaited).toBeInstanceOf(Ok);
-      expect(awaited.value).toEqual(value);
-    });
-
-    it.each(values)("ResultPromise.from('%s') returns Err with correct value", async (value) => {
-      const result = ResultPromise.from(err(value));
-
-      expect(result).toBeInstanceOf(ResultPromise);
-
-      const awaited = await result;
-
-      expect(awaited).toBeInstanceOf(Err);
-      expect(awaited.error).toEqual(value);
-    });
   });
 
   describe(".or", () => {
     it.each(values)(
-      "ResultPromise.from(ok('%s')).or() returns original Ok unchanged",
+      "ResultPromise.fromPromise(ok('%s')).or() returns original Ok unchanged",
       async (value) => {
         const orFn = vitest.fn();
-        const resultPromise = ResultPromise.from(ok(value)).or(orFn);
+        const resultPromise = ResultPromise.fromPromise(Promise.resolve(ok(value))).or(orFn);
         expect(resultPromise).toBeInstanceOf(ResultPromise);
         const result = await resultPromise;
         expect(result).toBeInstanceOf(Ok);
@@ -479,9 +233,11 @@ describe("ResultPromise.from", () => {
     );
 
     it.each(values)(
-      "ResultPromise.from(err('%s')).or() applies function to value",
+      "ResultPromise.fromPromise(err('%s')).or() applies function to value",
       async (value) => {
-        const resultPromise = ResultPromise.from(err(value)).or((x) => err(x));
+        const resultPromise = ResultPromise.fromPromise(Promise.resolve(err(value))).or((x) =>
+          err(x),
+        );
         expect(resultPromise).toBeInstanceOf(ResultPromise);
         const result = await resultPromise;
         expect(result).toBeInstanceOf(Err);
@@ -490,9 +246,11 @@ describe("ResultPromise.from", () => {
     );
 
     it.each(values)(
-      "ResultPromise.from(err('%s')).or() applies function to value",
+      "ResultPromise.fromPromise(err('%s')).or() applies function to value",
       async (value) => {
-        const resultPromise = ResultPromise.from(err(value)).or((x) => ok(x));
+        const resultPromise = ResultPromise.fromPromise(Promise.resolve(err(value))).or((x) =>
+          ok(x),
+        );
         expect(resultPromise).toBeInstanceOf(ResultPromise);
         const result = await resultPromise;
         expect(result).toBeInstanceOf(Ok);
@@ -503,10 +261,10 @@ describe("ResultPromise.from", () => {
 
   describe(".orMap", () => {
     it.each(values)(
-      "ResultPromise.from(ok('%s')).orMap() returns original Ok unchanged",
+      "ResultPromise.fromPromise(ok('%s')).orMap() returns original Ok unchanged",
       async (value) => {
         const orMapFn = vitest.fn();
-        const resultPromise = ResultPromise.from(ok(value)).orMap(orMapFn);
+        const resultPromise = ResultPromise.fromPromise(Promise.resolve(ok(value))).orMap(orMapFn);
 
         expect(resultPromise).toBeInstanceOf(ResultPromise);
 
@@ -520,9 +278,11 @@ describe("ResultPromise.from", () => {
     );
 
     it.each(values)(
-      "ResultPromise.from(err('%s')).orMap() applies function to value",
+      "ResultPromise.fromPromise(err('%s')).orMap() applies function to value",
       async (value) => {
-        const resultPromise = ResultPromise.from(err(value)).orMap((x) => x);
+        const resultPromise = ResultPromise.fromPromise(Promise.resolve(err(value))).orMap(
+          (x) => x,
+        );
 
         expect(resultPromise).toBeInstanceOf(ResultPromise);
 
@@ -536,10 +296,10 @@ describe("ResultPromise.from", () => {
 
   describe(".orTee", () => {
     it.each(values)(
-      "ResultPromise.from(ok('%s')).orTee() returns original Ok unchanged",
+      "ResultPromise.fromPromise(ok('%s')).orTee() returns original Ok unchanged",
       async (value) => {
         const orTeeFn = vitest.fn();
-        const resultPromise = ResultPromise.from(ok(value)).orTee(orTeeFn);
+        const resultPromise = ResultPromise.fromPromise(Promise.resolve(ok(value))).orTee(orTeeFn);
 
         expect(resultPromise).toBeInstanceOf(ResultPromise);
 
@@ -553,12 +313,12 @@ describe("ResultPromise.from", () => {
     );
 
     it.each(values)(
-      "ResultPromise.from(err('%s')).orTee() applies function to value",
+      "ResultPromise.fromPromise(err('%s')).orTee() applies function to value",
       async (value) => {
         const orTeeFn = vitest.fn().mockImplementation(() => {
           throw new Error("hi");
         });
-        const resultPromise = ResultPromise.from(err(value)).orTee(orTeeFn);
+        const resultPromise = ResultPromise.fromPromise(Promise.resolve(err(value))).orTee(orTeeFn);
 
         expect(resultPromise).toBeInstanceOf(ResultPromise);
 
@@ -574,9 +334,11 @@ describe("ResultPromise.from", () => {
 
   describe(".and", () => {
     it.each(values)(
-      "ResultPromise.from(ok('%s')).and() applies function to value",
+      "ResultPromise.fromPromise(ok('%s')).and() applies function to value",
       async (value) => {
-        const resultPromise = ResultPromise.from(ok(value)).and((x) => ok(x));
+        const resultPromise = ResultPromise.fromPromise(Promise.resolve(ok(value))).and((x) =>
+          ok(x),
+        );
         expect(resultPromise).toBeInstanceOf(ResultPromise);
         const result = await resultPromise;
         expect(result).toBeInstanceOf(Ok);
@@ -585,9 +347,11 @@ describe("ResultPromise.from", () => {
     );
 
     it.each(values)(
-      "ResultPromise.from(ok('%s')).and() applies function to value",
+      "ResultPromise.fromPromise(ok('%s')).and() applies function to value",
       async (value) => {
-        const resultPromise = ResultPromise.from(ok(value)).and((x) => err(x));
+        const resultPromise = ResultPromise.fromPromise(Promise.resolve(ok(value))).and((x) =>
+          err(x),
+        );
         expect(resultPromise).toBeInstanceOf(ResultPromise);
         const result = await resultPromise;
         expect(result).toBeInstanceOf(Err);
@@ -596,10 +360,10 @@ describe("ResultPromise.from", () => {
     );
 
     it.each(values)(
-      "ResultPromise.from(err('%s')).and() returns original Err unchanged",
+      "ResultPromise.fromPromise(err('%s')).and() returns original Err unchanged",
       async (value) => {
         const andFn = vitest.fn();
-        const resultPromise = ResultPromise.from(err(value)).and(andFn);
+        const resultPromise = ResultPromise.fromPromise(Promise.resolve(err(value))).and(andFn);
         expect(resultPromise).toBeInstanceOf(ResultPromise);
         const result = await resultPromise;
         expect(result).toBeInstanceOf(Err);
@@ -611,9 +375,11 @@ describe("ResultPromise.from", () => {
 
   describe(".andMap", () => {
     it.each(values)(
-      "ResultPromise.from(ok('%s')).andMap() applies function to value",
+      "ResultPromise.fromPromise(ok('%s')).andMap() applies function to value",
       async (value) => {
-        const resultPromise = ResultPromise.from(ok(value)).andMap((x) => x);
+        const resultPromise = ResultPromise.fromPromise(Promise.resolve(ok(value))).andMap(
+          (x) => x,
+        );
 
         expect(resultPromise).toBeInstanceOf(ResultPromise);
 
@@ -625,10 +391,12 @@ describe("ResultPromise.from", () => {
     );
 
     it.each(values)(
-      "ResultPromise.from(err('%s')).andMap() returns original Err unchanged",
+      "ResultPromise.fromPromise(err('%s')).andMap() returns original Err unchanged",
       async (value) => {
         const andMapFn = vitest.fn();
-        const resultPromise = ResultPromise.from(err(value)).andMap(andMapFn);
+        const resultPromise = ResultPromise.fromPromise(Promise.resolve(err(value))).andMap(
+          andMapFn,
+        );
 
         expect(resultPromise).toBeInstanceOf(ResultPromise);
 
@@ -644,13 +412,15 @@ describe("ResultPromise.from", () => {
 
   describe(".andTee", () => {
     it.each(values)(
-      "ResultPromise.from(ok('%s')).andTee() applies function to value",
+      "ResultPromise.fromPromise(ok('%s')).andTee() applies function to value",
       async (value) => {
         const andTeeFn = vitest.fn().mockImplementation(() => {
           throw new Error("hi");
         });
 
-        const resultPromise = ResultPromise.from(ok(value)).andTee(andTeeFn);
+        const resultPromise = ResultPromise.fromPromise(Promise.resolve(ok(value))).andTee(
+          andTeeFn,
+        );
 
         expect(resultPromise).toBeInstanceOf(ResultPromise);
 
@@ -664,10 +434,12 @@ describe("ResultPromise.from", () => {
     );
 
     it.each(values)(
-      "ResultPromise.from(err('%s')).andTee() returns original Err unchanged",
+      "ResultPromise.fromPromise(err('%s')).andTee() returns original Err unchanged",
       async (value) => {
         const andTeeFn = vitest.fn();
-        const resultPromise = ResultPromise.from(err(value)).andTee(andTeeFn);
+        const resultPromise = ResultPromise.fromPromise(Promise.resolve(err(value))).andTee(
+          andTeeFn,
+        );
 
         expect(resultPromise).toBeInstanceOf(ResultPromise);
 
@@ -679,5 +451,202 @@ describe("ResultPromise.from", () => {
         expect(andTeeFn).not.toBeCalled();
       },
     );
+  });
+});
+
+describe("ResultPromise.fromFunction", () => {
+  describe("instantiation", () => {
+    it.each(values)(
+      "ResultPromise.fromFunction returns function that returns Ok with correct value",
+      async (value) => {
+        const fn = ResultPromise.fromFunction(async (x: typeof value) => {
+          return ok(x);
+        });
+
+        expect(typeof fn).toBe("function");
+
+        const resultPromise = fn(value);
+        expect(resultPromise).toBeInstanceOf(ResultPromise);
+
+        const result = await resultPromise;
+        expect(result).toBeInstanceOf(Ok);
+        expect(result.value).toEqual(value);
+      },
+    );
+
+    it.each(values)(
+      "ResultPromise.fromFunction returns function that returns Err with correct value",
+      async (value) => {
+        const fn = ResultPromise.fromFunction(async (x: typeof value) => {
+          return err(x);
+        });
+
+        expect(typeof fn).toBe("function");
+
+        const resultPromise = fn(value);
+        expect(resultPromise).toBeInstanceOf(ResultPromise);
+
+        const result = await resultPromise;
+        expect(result).toBeInstanceOf(Err);
+        expect(result.error).toEqual(value);
+      },
+    );
+  });
+
+  describe("function chaining", () => {
+    it.each(values)(
+      "ResultPromise.fromFunction with .or() returns original Ok unchanged",
+      async (value) => {
+        const orFn = vitest.fn();
+        const fn = ResultPromise.fromFunction(async (x: typeof value) => {
+          return ok(x);
+        });
+
+        const resultPromise = fn(value).or(orFn);
+        expect(resultPromise).toBeInstanceOf(ResultPromise);
+
+        const result = await resultPromise;
+        expect(result).toBeInstanceOf(Ok);
+        expect(result.value).toEqual(value);
+        expect(orFn).not.toBeCalled();
+      },
+    );
+
+    it.each(values)(
+      "ResultPromise.fromFunction with .or() applies function to error",
+      async (value) => {
+        const fn = ResultPromise.fromFunction(async (x: typeof value) => {
+          return err(x);
+        });
+
+        const resultPromise = fn(value).or((error) => err(error));
+        expect(resultPromise).toBeInstanceOf(ResultPromise);
+
+        const result = await resultPromise;
+        expect(result).toBeInstanceOf(Err);
+        expect(result.error).toEqual(value);
+      },
+    );
+
+    it.each(values)(
+      "ResultPromise.fromFunction with .or() transforms error to success",
+      async (value) => {
+        const fn = ResultPromise.fromFunction(async (x: typeof value) => {
+          return err(x);
+        });
+
+        const resultPromise = fn(value).or((error) => ok(error));
+        expect(resultPromise).toBeInstanceOf(ResultPromise);
+
+        const result = await resultPromise;
+        expect(result).toBeInstanceOf(Ok);
+        expect(result.value).toEqual(value);
+      },
+    );
+
+    it.each(values)(
+      "ResultPromise.fromFunction with .and() applies function to value",
+      async (value) => {
+        const fn = ResultPromise.fromFunction(async (x: typeof value) => {
+          return ok(x);
+        });
+
+        const resultPromise = fn(value).and((val) => ok(val));
+        expect(resultPromise).toBeInstanceOf(ResultPromise);
+
+        const result = await resultPromise;
+        expect(result).toBeInstanceOf(Ok);
+        expect(result.value).toEqual(value);
+      },
+    );
+
+    it.each(values)(
+      "ResultPromise.fromFunction with .and() transforms success to error",
+      async (value) => {
+        const fn = ResultPromise.fromFunction(async (x: typeof value) => {
+          return ok(x);
+        });
+
+        const resultPromise = fn(value).and((val) => err(val));
+        expect(resultPromise).toBeInstanceOf(ResultPromise);
+
+        const result = await resultPromise;
+        expect(result).toBeInstanceOf(Err);
+        expect(result.error).toEqual(value);
+      },
+    );
+
+    it.each(values)(
+      "ResultPromise.fromFunction with .and() returns original error unchanged",
+      async (value) => {
+        const andFn = vitest.fn();
+        const fn = ResultPromise.fromFunction(async (x: typeof value) => {
+          return err(x);
+        });
+
+        const resultPromise = fn(value).and(andFn);
+        expect(resultPromise).toBeInstanceOf(ResultPromise);
+
+        const result = await resultPromise;
+        expect(result).toBeInstanceOf(Err);
+        expect(result.error).toEqual(value);
+        expect(andFn).not.toBeCalled();
+      },
+    );
+  });
+
+  describe("parameter handling", () => {
+    it("handles multiple parameters correctly", async () => {
+      const fn = ResultPromise.fromFunction(async (id: string, name: string, age: number) => {
+        return ok({ id, name, age });
+      });
+
+      const resultPromise = fn("123", "John", 30);
+      expect(resultPromise).toBeInstanceOf(ResultPromise);
+
+      const result = await resultPromise;
+      expect(result).toBeInstanceOf(Ok);
+      expect(result.value).toEqual({ id: "123", name: "John", age: 30 });
+    });
+
+    it("handles no parameters correctly", async () => {
+      const fn = ResultPromise.fromFunction(async () => {
+        return ok("no params");
+      });
+
+      const resultPromise = fn();
+      expect(resultPromise).toBeInstanceOf(ResultPromise);
+
+      const result = await resultPromise;
+      expect(result).toBeInstanceOf(Ok);
+      expect(result.value).toBe("no params");
+    });
+
+    it("preserves function signature and types", async () => {
+      const fn = ResultPromise.fromFunction(async (id: string) => {
+        if (id.length > 5) {
+          return ok(id.toUpperCase());
+        }
+        return err("ID too short");
+      });
+
+      // Test success case
+      const successPromise = fn("validid");
+      const successResult = await successPromise;
+      expect(successResult).toBeInstanceOf(Ok);
+
+      if (successResult.isOk()) {
+        expect(successResult.value).toBe("VALIDID");
+      }
+
+      // Test error case
+      const errorPromise = fn("abc");
+      const errorResult = await errorPromise;
+      expect(errorResult).toBeInstanceOf(Err);
+
+      if (errorResult.isErr()) {
+        expect(errorResult.error).toBe("ID too short");
+      }
+    });
   });
 });
