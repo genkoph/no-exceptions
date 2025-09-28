@@ -75,7 +75,7 @@ describe("Ok", () => {
       const result = ok(value).andErr(orFn);
 
       expect(result).toBeInstanceOf(Ok);
-      expect((result as Ok<typeof value>).value).toEqual(value);
+      expect(result.unwrap()).toEqual(value);
 
       expect(orFn).not.toBeCalled();
     });

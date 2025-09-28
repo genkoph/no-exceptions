@@ -5,13 +5,13 @@ interface ResultCore<T, E> {
    * Checks if the result is an Ok variant.
    * @returns True if this is an Ok result, false otherwise.
    */
-  isOk(): this is Ok<T>;
+  isOk(): this is Ok<T, E>;
 
   /**
    * Checks if the result is an Err variant.
    * @returns True if this is an Err result, false otherwise.
    */
-  isErr(): this is Err<E>;
+  isErr(): this is Err<T, E>;
 
   /**
    * Returns a ResultPromise that wraps this Result, allowing for async chaining.
@@ -167,50 +167,50 @@ interface ResultPromiseCore<T, E> {
  * A Result type that represents either a success (Ok) or failure (Err) value.
  * This is a union type of Ok<T> and Err<E>.
  */
-export type Result<T, E> = Ok<T> | Err<E>;
+export type Result<T, E> = Ok<T, E> | Err<T, E>;
 
 /**
  * Represents a successful result containing a value.
  */
-export class Ok<T> implements ResultCore<T, never> {
+export class Ok<T = unknown, E = never> implements ResultCore<T, E> {
   constructor(readonly value: T) {}
 
-  isOk(): this is Ok<T> {
+  isOk(): this is Ok<T, E> {
     return true;
   }
 
-  isErr(): this is never {
+  isErr(): this is Err<T, E> {
     return false;
   }
 
-  get async(): ResultPromise<T, never> {
+  get async(): ResultPromise<T, E> {
     return ResultPromise.fromPromise(Promise.resolve(ok(this.value)));
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  andErr<U, V>(fn: (error: never) => Result<U, V>): Result<T | U, V> {
+  andErr<U, V>(fn: (error: E) => Result<U, V>): Result<T | U, V> {
     return ok(this.value);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  mapErr<U>(fn: (error: never) => U): Result<T, U> {
+  mapErr<U>(fn: (error: E) => U): Result<T, U> {
     return ok(this.value);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  tapErr(fn: (error: never) => unknown): Result<T, never> {
+  tapErr(fn: (error: E) => unknown): Result<T, E> {
     return ok(this.value);
   }
 
-  and<U, V>(fn: (value: T) => Result<U, V>): Result<U, never | V> {
+  and<U, V>(fn: (value: T) => Result<U, V>): Result<U, E | V> {
     return fn(this.value);
   }
 
-  map<U>(fn: (value: T) => U): Result<U, never> {
+  map<U>(fn: (value: T) => U): Result<U, E> {
     return ok(fn(this.value));
   }
 
-  tap(fn: (value: T) => unknown): Result<T, never> {
+  tap(fn: (value: T) => unknown): Result<T, E> {
     try {
       fn(this.value);
     } catch {
@@ -220,7 +220,7 @@ export class Ok<T> implements ResultCore<T, never> {
     return ok(this.value);
   }
 
-  attempt<U>(fn: (value: T) => U): Result<U, never | Error> {
+  attempt<U>(fn: (value: T) => U): Result<U, E | Error> {
     try {
       return ok(fn(this.value));
     } catch (error) {
@@ -237,45 +237,45 @@ export class Ok<T> implements ResultCore<T, never> {
 /**
  * Represents a failed result containing an error.
  */
-export class Err<E> implements ResultCore<never, E> {
+export class Err<T = never, E = unknown> implements ResultCore<T, E> {
   constructor(readonly error: E) {}
 
-  isOk(): this is never {
+  isOk(): this is Ok<T, E> {
     return false;
   }
 
-  isErr(): this is Err<E> {
+  isErr(): this is Err<T, E> {
     return true;
   }
 
-  get async(): ResultPromise<never, E> {
+  get async(): ResultPromise<T, E> {
     return ResultPromise.fromPromise(Promise.resolve(err(this.error)));
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  and<U, V>(fn: (value: never) => Result<U, V>): Result<U, E | V> {
+  and<U, V>(fn: (value: T) => Result<U, V>): Result<U, E | V> {
     return err(this.error);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  map<U>(fn: (value: never) => U): Result<U, E> {
+  map<U>(fn: (value: T) => U): Result<U, E> {
     return err(this.error);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  tap(fn: (value: never) => unknown): Result<never, E> {
+  tap(fn: (value: T) => unknown): Result<T, E> {
     return err(this.error);
   }
 
-  andErr<U, V>(fn: (error: E) => Result<U, V>): Result<never | U, V> {
+  andErr<U, V>(fn: (error: E) => Result<U, V>): Result<T | U, V> {
     return fn(this.error);
   }
 
-  mapErr<U>(fn: (error: E) => U): Result<never, U> {
+  mapErr<U>(fn: (error: E) => U): Result<T, U> {
     return err(fn(this.error));
   }
 
-  tapErr(fn: (error: E) => unknown): Result<never, E> {
+  tapErr(fn: (error: E) => unknown): Result<T, E> {
     try {
       fn(this.error);
     } catch {
@@ -286,11 +286,11 @@ export class Err<E> implements ResultCore<never, E> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  attempt<U>(fn: (value: never) => U): Result<U, E | Error> {
+  attempt<U>(fn: (value: T) => U): Result<U, E | Error> {
     return err(this.error);
   }
 
-  unwrap<V = never>(fallback?: V): never | V {
+  unwrap<V = never>(fallback?: V): T | V {
     if (arguments.length > 0) {
       return fallback!;
     }
@@ -414,7 +414,7 @@ export class ResultPromise<T = never, E = never>
     );
   }
 
-  async unwrap<V>(fallback?: V): Promise<T | V> {
+  async unwrap<V = never>(fallback?: V): Promise<T | V> {
     return this.promise.then((result) => result.unwrap(fallback));
   }
 
@@ -446,7 +446,7 @@ export class ResultPromise<T = never, E = never>
  * @param value The successful value to wrap
  * @returns A new Ok<T> instance
  */
-export function ok<T>(value: T): Ok<T> {
+export function ok<T = unknown, E = never>(value: T): Ok<T, E> {
   return new Ok(value);
 }
 
@@ -455,6 +455,6 @@ export function ok<T>(value: T): Ok<T> {
  * @param error The error value to wrap
  * @returns A new Err<E> instance
  */
-export function err<E>(error: E): Err<E> {
+export function err<T = never, E = unknown>(error: E): Err<T, E> {
   return new Err(error);
 }
