@@ -171,411 +171,411 @@ describe("Err (types)", () => {
   });
 });
 
-describe("ResultPromise.from (types)", () => {
+describe("ResultPromise.create (types)", () => {
   describe("instantiation", () => {
-    assertType<ResultPromise<number, never>>(ResultPromise.fromPromise(Promise.resolve(ok(42))));
+    assertType<ResultPromise<number, never>>(ResultPromise.create(Promise.resolve(ok(42))));
     assertType<ResultPromise<string, never>>(
-      ResultPromise.fromPromise(Promise.resolve(ok("hello"))),
+      ResultPromise.create(Promise.resolve(ok("hello"))),
     );
-    assertType<ResultPromise<boolean, never>>(ResultPromise.fromPromise(Promise.resolve(ok(true))));
+    assertType<ResultPromise<boolean, never>>(ResultPromise.create(Promise.resolve(ok(true))));
     assertType<ResultPromise<boolean, never>>(
-      ResultPromise.fromPromise(Promise.resolve(ok(false))),
+      ResultPromise.create(Promise.resolve(ok(false))),
     );
-    assertType<ResultPromise<null, never>>(ResultPromise.fromPromise(Promise.resolve(ok(null))));
+    assertType<ResultPromise<null, never>>(ResultPromise.create(Promise.resolve(ok(null))));
     assertType<ResultPromise<undefined, never>>(
-      ResultPromise.fromPromise(Promise.resolve(ok(undefined))),
+      ResultPromise.create(Promise.resolve(ok(undefined))),
     );
-    assertType<ResultPromise<number, never>>(ResultPromise.fromPromise(Promise.resolve(ok(0))));
-    assertType<ResultPromise<string, never>>(ResultPromise.fromPromise(Promise.resolve(ok(""))));
-    assertType<ResultPromise<number, never>>(ResultPromise.fromPromise(Promise.resolve(ok(NaN))));
+    assertType<ResultPromise<number, never>>(ResultPromise.create(Promise.resolve(ok(0))));
+    assertType<ResultPromise<string, never>>(ResultPromise.create(Promise.resolve(ok(""))));
+    assertType<ResultPromise<number, never>>(ResultPromise.create(Promise.resolve(ok(NaN))));
     assertType<ResultPromise<number, never>>(
-      ResultPromise.fromPromise(Promise.resolve(ok(Infinity))),
+      ResultPromise.create(Promise.resolve(ok(Infinity))),
     );
     assertType<ResultPromise<number, never>>(
-      ResultPromise.fromPromise(Promise.resolve(ok(-Infinity))),
+      ResultPromise.create(Promise.resolve(ok(-Infinity))),
     );
-    assertType<ResultPromise<never, number>>(ResultPromise.fromPromise(Promise.resolve(err(42))));
+    assertType<ResultPromise<never, number>>(ResultPromise.create(Promise.resolve(err(42))));
     assertType<ResultPromise<never, string>>(
-      ResultPromise.fromPromise(Promise.resolve(err("hello"))),
+      ResultPromise.create(Promise.resolve(err("hello"))),
     );
     assertType<ResultPromise<never, boolean>>(
-      ResultPromise.fromPromise(Promise.resolve(err(true))),
+      ResultPromise.create(Promise.resolve(err(true))),
     );
     assertType<ResultPromise<never, boolean>>(
-      ResultPromise.fromPromise(Promise.resolve(err(false))),
+      ResultPromise.create(Promise.resolve(err(false))),
     );
-    assertType<ResultPromise<never, null>>(ResultPromise.fromPromise(Promise.resolve(err(null))));
+    assertType<ResultPromise<never, null>>(ResultPromise.create(Promise.resolve(err(null))));
     assertType<ResultPromise<never, undefined>>(
-      ResultPromise.fromPromise(Promise.resolve(err(undefined))),
+      ResultPromise.create(Promise.resolve(err(undefined))),
     );
-    assertType<ResultPromise<never, number>>(ResultPromise.fromPromise(Promise.resolve(err(0))));
-    assertType<ResultPromise<never, string>>(ResultPromise.fromPromise(Promise.resolve(err(""))));
-    assertType<ResultPromise<never, number>>(ResultPromise.fromPromise(Promise.resolve(err(NaN))));
+    assertType<ResultPromise<never, number>>(ResultPromise.create(Promise.resolve(err(0))));
+    assertType<ResultPromise<never, string>>(ResultPromise.create(Promise.resolve(err(""))));
+    assertType<ResultPromise<never, number>>(ResultPromise.create(Promise.resolve(err(NaN))));
     assertType<ResultPromise<never, number>>(
-      ResultPromise.fromPromise(Promise.resolve(err(Infinity))),
+      ResultPromise.create(Promise.resolve(err(Infinity))),
     );
     assertType<ResultPromise<never, number>>(
-      ResultPromise.fromPromise(Promise.resolve(err(-Infinity))),
+      ResultPromise.create(Promise.resolve(err(-Infinity))),
     );
-    assertType<ResultPromise<never[], never>>(ResultPromise.fromPromise(Promise.resolve(ok([]))));
+    assertType<ResultPromise<never[], never>>(ResultPromise.create(Promise.resolve(ok([]))));
     assertType<ResultPromise<number[], never>>(
-      ResultPromise.fromPromise(Promise.resolve(ok([1, 2, 3]))),
+      ResultPromise.create(Promise.resolve(ok([1, 2, 3]))),
     );
     assertType<ResultPromise<Record<string, unknown>, never>>(
-      ResultPromise.fromPromise(Promise.resolve(ok({}))),
+      ResultPromise.create(Promise.resolve(ok({}))),
     );
     assertType<ResultPromise<{ a: number; b: string }, never>>(
-      ResultPromise.fromPromise(Promise.resolve(ok({ a: 1, b: "test" }))),
+      ResultPromise.create(Promise.resolve(ok({ a: 1, b: "test" }))),
     );
     assertType<ResultPromise<symbol, never>>(
-      ResultPromise.fromPromise(Promise.resolve(ok(Symbol("sym")))),
+      ResultPromise.create(Promise.resolve(ok(Symbol("sym")))),
     );
     assertType<ResultPromise<() => void, never>>(
-      ResultPromise.fromPromise(Promise.resolve(ok(function () {}))),
+      ResultPromise.create(Promise.resolve(ok(function () {}))),
     );
     assertType<ResultPromise<() => number, never>>(
-      ResultPromise.fromPromise(Promise.resolve(ok(() => 123))),
+      ResultPromise.create(Promise.resolve(ok(() => 123))),
     );
-    assertType<ResultPromise<never, never[]>>(ResultPromise.fromPromise(Promise.resolve(err([]))));
+    assertType<ResultPromise<never, never[]>>(ResultPromise.create(Promise.resolve(err([]))));
     assertType<ResultPromise<never, number[]>>(
-      ResultPromise.fromPromise(Promise.resolve(err([1, 2, 3]))),
+      ResultPromise.create(Promise.resolve(err([1, 2, 3]))),
     );
     assertType<ResultPromise<never, Record<string, unknown>>>(
-      ResultPromise.fromPromise(Promise.resolve(err({}))),
+      ResultPromise.create(Promise.resolve(err({}))),
     );
     assertType<ResultPromise<never, { a: number; b: string }>>(
-      ResultPromise.fromPromise(Promise.resolve(err({ a: 1, b: "test" }))),
+      ResultPromise.create(Promise.resolve(err({ a: 1, b: "test" }))),
     );
     assertType<ResultPromise<never, symbol>>(
-      ResultPromise.fromPromise(Promise.resolve(err(Symbol("sym")))),
+      ResultPromise.create(Promise.resolve(err(Symbol("sym")))),
     );
     assertType<ResultPromise<never, () => void>>(
-      ResultPromise.fromPromise(Promise.resolve(err(function () {}))),
+      ResultPromise.create(Promise.resolve(err(function () {}))),
     );
     assertType<ResultPromise<never, () => number>>(
-      ResultPromise.fromPromise(Promise.resolve(err(() => 123))),
+      ResultPromise.create(Promise.resolve(err(() => 123))),
     );
   });
 
   describe(".andErr", () => {
     assertType<ResultPromise<string | number, never>>(
-      ResultPromise.fromPromise(Promise.resolve(ok("hello"))).andErr(() => ok(42)),
+      ResultPromise.create(Promise.resolve(ok("hello"))).andErr(() => ok(42)),
     );
     assertType<ResultPromise<string, string>>(
-      ResultPromise.fromPromise(Promise.resolve(ok("hello"))).andErr(() => err("error")),
+      ResultPromise.create(Promise.resolve(ok("hello"))).andErr(() => err("error")),
     );
     assertType<ResultPromise<number | string, never>>(
-      ResultPromise.fromPromise(Promise.resolve(ok(42))).andErr(() => ok("world")),
+      ResultPromise.create(Promise.resolve(ok(42))).andErr(() => ok("world")),
     );
     assertType<ResultPromise<number, number>>(
-      ResultPromise.fromPromise(Promise.resolve(ok(42))).andErr(() => err(123)),
+      ResultPromise.create(Promise.resolve(ok(42))).andErr(() => err(123)),
     );
     assertType<ResultPromise<number, never>>(
-      ResultPromise.fromPromise(Promise.resolve(err("hello"))).andErr(() => ok(42)),
+      ResultPromise.create(Promise.resolve(err("hello"))).andErr(() => ok(42)),
     );
     assertType<ResultPromise<never, string>>(
-      ResultPromise.fromPromise(Promise.resolve(err("hello"))).andErr(() => err("error")),
+      ResultPromise.create(Promise.resolve(err("hello"))).andErr(() => err("error")),
     );
     assertType<ResultPromise<string, never>>(
-      ResultPromise.fromPromise(Promise.resolve(err(42))).andErr(() => ok("world")),
+      ResultPromise.create(Promise.resolve(err(42))).andErr(() => ok("world")),
     );
     assertType<ResultPromise<never, number>>(
-      ResultPromise.fromPromise(Promise.resolve(err(42))).andErr(() => err(123)),
+      ResultPromise.create(Promise.resolve(err(42))).andErr(() => err(123)),
     );
   });
 
   describe(".mapErr", () => {
     assertType<ResultPromise<string, string>>(
-      ResultPromise.fromPromise(Promise.resolve(ok("hello"))).mapErr(() => "world"),
+      ResultPromise.create(Promise.resolve(ok("hello"))).mapErr(() => "world"),
     );
     assertType<ResultPromise<number, number>>(
-      ResultPromise.fromPromise(Promise.resolve(ok(42))).mapErr(() => 123),
+      ResultPromise.create(Promise.resolve(ok(42))).mapErr(() => 123),
     );
     assertType<ResultPromise<boolean, boolean>>(
-      ResultPromise.fromPromise(Promise.resolve(ok(true))).mapErr(() => false),
+      ResultPromise.create(Promise.resolve(ok(true))).mapErr(() => false),
     );
     assertType<ResultPromise<never, number>>(
-      ResultPromise.fromPromise(Promise.resolve(err("hello"))).mapErr(() => 42),
+      ResultPromise.create(Promise.resolve(err("hello"))).mapErr(() => 42),
     );
     assertType<ResultPromise<never, string>>(
-      ResultPromise.fromPromise(Promise.resolve(err(42))).mapErr(() => "world"),
+      ResultPromise.create(Promise.resolve(err(42))).mapErr(() => "world"),
     );
     assertType<ResultPromise<never, boolean>>(
-      ResultPromise.fromPromise(Promise.resolve(err("test"))).mapErr(() => true),
+      ResultPromise.create(Promise.resolve(err("test"))).mapErr(() => true),
     );
   });
 
   describe(".tapErr", () => {
     assertType<ResultPromise<string, never>>(
-      ResultPromise.fromPromise(Promise.resolve(ok("hello"))).tapErr(() => {}),
+      ResultPromise.create(Promise.resolve(ok("hello"))).tapErr(() => {}),
     );
     assertType<ResultPromise<number, never>>(
-      ResultPromise.fromPromise(Promise.resolve(ok(42))).tapErr(() => {}),
+      ResultPromise.create(Promise.resolve(ok(42))).tapErr(() => {}),
     );
     assertType<ResultPromise<never, string>>(
-      ResultPromise.fromPromise(Promise.resolve(err("hello"))).tapErr(() => {}),
+      ResultPromise.create(Promise.resolve(err("hello"))).tapErr(() => {}),
     );
     assertType<ResultPromise<never, number>>(
-      ResultPromise.fromPromise(Promise.resolve(err(42))).tapErr(() => {}),
+      ResultPromise.create(Promise.resolve(err(42))).tapErr(() => {}),
     );
   });
 
   describe(".and", () => {
     assertType<ResultPromise<number, never>>(
-      ResultPromise.fromPromise(Promise.resolve(ok("hello"))).and(() => ok(42)),
+      ResultPromise.create(Promise.resolve(ok("hello"))).and(() => ok(42)),
     );
     assertType<ResultPromise<never, string>>(
-      ResultPromise.fromPromise(Promise.resolve(ok("hello"))).and(() => err("error")),
+      ResultPromise.create(Promise.resolve(ok("hello"))).and(() => err("error")),
     );
     assertType<ResultPromise<string, never>>(
-      ResultPromise.fromPromise(Promise.resolve(ok(42))).and(() => ok("world")),
+      ResultPromise.create(Promise.resolve(ok(42))).and(() => ok("world")),
     );
     assertType<ResultPromise<never, number>>(
-      ResultPromise.fromPromise(Promise.resolve(ok(42))).and(() => err(123)),
+      ResultPromise.create(Promise.resolve(ok(42))).and(() => err(123)),
     );
     assertType<ResultPromise<number, string>>(
-      ResultPromise.fromPromise(Promise.resolve(err("hello"))).and(() => ok(42)),
+      ResultPromise.create(Promise.resolve(err("hello"))).and(() => ok(42)),
     );
     assertType<ResultPromise<never, string>>(
-      ResultPromise.fromPromise(Promise.resolve(err("hello"))).and(() => err("error")),
+      ResultPromise.create(Promise.resolve(err("hello"))).and(() => err("error")),
     );
     assertType<ResultPromise<string, number>>(
-      ResultPromise.fromPromise(Promise.resolve(err(42))).and(() => ok("world")),
+      ResultPromise.create(Promise.resolve(err(42))).and(() => ok("world")),
     );
     assertType<ResultPromise<never, number>>(
-      ResultPromise.fromPromise(Promise.resolve(err(42))).and(() => err(123)),
+      ResultPromise.create(Promise.resolve(err(42))).and(() => err(123)),
     );
   });
 
   describe(".map", () => {
     assertType<ResultPromise<number, never>>(
-      ResultPromise.fromPromise(Promise.resolve(ok("hello"))).map(() => 42),
+      ResultPromise.create(Promise.resolve(ok("hello"))).map(() => 42),
     );
     assertType<ResultPromise<string, never>>(
-      ResultPromise.fromPromise(Promise.resolve(ok(42))).map(() => "world"),
+      ResultPromise.create(Promise.resolve(ok(42))).map(() => "world"),
     );
     assertType<ResultPromise<boolean, never>>(
-      ResultPromise.fromPromise(Promise.resolve(ok("test"))).map(() => true),
+      ResultPromise.create(Promise.resolve(ok("test"))).map(() => true),
     );
     assertType<ResultPromise<number, string>>(
-      ResultPromise.fromPromise(Promise.resolve(err("hello"))).map(() => 42),
+      ResultPromise.create(Promise.resolve(err("hello"))).map(() => 42),
     );
     assertType<ResultPromise<string, number>>(
-      ResultPromise.fromPromise(Promise.resolve(err(42))).map(() => "world"),
+      ResultPromise.create(Promise.resolve(err(42))).map(() => "world"),
     );
     assertType<ResultPromise<boolean, string>>(
-      ResultPromise.fromPromise(Promise.resolve(err("test"))).map(() => true),
+      ResultPromise.create(Promise.resolve(err("test"))).map(() => true),
     );
   });
 
   describe(".tap", () => {
     assertType<ResultPromise<string, never>>(
-      ResultPromise.fromPromise(Promise.resolve(ok("hello"))).tap(() => {}),
+      ResultPromise.create(Promise.resolve(ok("hello"))).tap(() => {}),
     );
     assertType<ResultPromise<number, never>>(
-      ResultPromise.fromPromise(Promise.resolve(ok(42))).tap(() => {}),
+      ResultPromise.create(Promise.resolve(ok(42))).tap(() => {}),
     );
     assertType<ResultPromise<never, string>>(
-      ResultPromise.fromPromise(Promise.resolve(err("hello"))).tap(() => {}),
+      ResultPromise.create(Promise.resolve(err("hello"))).tap(() => {}),
     );
     assertType<ResultPromise<never, number>>(
-      ResultPromise.fromPromise(Promise.resolve(err(42))).tap(() => {}),
+      ResultPromise.create(Promise.resolve(err(42))).tap(() => {}),
     );
   });
 
   describe(".attempt", () => {
     assertType<ResultPromise<number, Error>>(
-      ResultPromise.fromPromise(Promise.resolve(ok("hello"))).attempt(() => 42),
+      ResultPromise.create(Promise.resolve(ok("hello"))).attempt(() => 42),
     );
     assertType<ResultPromise<string, Error>>(
-      ResultPromise.fromPromise(Promise.resolve(ok("hello"))).attempt(() => {
+      ResultPromise.create(Promise.resolve(ok("hello"))).attempt(() => {
         throw new Error("test");
       }),
     );
     assertType<ResultPromise<boolean, Error>>(
-      ResultPromise.fromPromise(Promise.resolve(ok(42))).attempt(() => true),
+      ResultPromise.create(Promise.resolve(ok(42))).attempt(() => true),
     );
     assertType<ResultPromise<number[], Error>>(
-      ResultPromise.fromPromise(Promise.resolve(ok("array"))).attempt(() => [1, 2, 3]),
+      ResultPromise.create(Promise.resolve(ok("array"))).attempt(() => [1, 2, 3]),
     );
     assertType<ResultPromise<{ b: number }, Error>>(
-      ResultPromise.fromPromise(Promise.resolve(ok("object"))).attempt(() => ({ b: 2 })),
+      ResultPromise.create(Promise.resolve(ok("object"))).attempt(() => ({ b: 2 })),
     );
     assertType<ResultPromise<number, string | Error>>(
-      ResultPromise.fromPromise(Promise.resolve(err("hello"))).attempt(() => 42),
+      ResultPromise.create(Promise.resolve(err("hello"))).attempt(() => 42),
     );
     assertType<ResultPromise<string, string | Error>>(
-      ResultPromise.fromPromise(Promise.resolve(err("hello"))).attempt(() => "world"),
+      ResultPromise.create(Promise.resolve(err("hello"))).attempt(() => "world"),
     );
     assertType<ResultPromise<boolean, number | Error>>(
-      ResultPromise.fromPromise(Promise.resolve(err(42))).attempt(() => true),
+      ResultPromise.create(Promise.resolve(err(42))).attempt(() => true),
     );
   });
 });
 
-describe("ResultPromise.fromFunction (types)", () => {
+describe("ResultPromise.createFunction (types)", () => {
   describe("instantiation", () => {
     assertType<(...args: [number]) => ResultPromise<number, never>>(
-      ResultPromise.fromFunction(async (x: number) => ok(x)),
+      ResultPromise.createFunction(async (x: number) => ok(x)),
     );
     assertType<(...args: [string]) => ResultPromise<string, never>>(
-      ResultPromise.fromFunction(async (x: string) => ok(x)),
+      ResultPromise.createFunction(async (x: string) => ok(x)),
     );
     assertType<(...args: [boolean]) => ResultPromise<boolean, never>>(
-      ResultPromise.fromFunction(async (x: boolean) => ok(x)),
+      ResultPromise.createFunction(async (x: boolean) => ok(x)),
     );
     assertType<(...args: [null]) => ResultPromise<null, never>>(
-      ResultPromise.fromFunction(async (x: null) => ok(x)),
+      ResultPromise.createFunction(async (x: null) => ok(x)),
     );
     assertType<(...args: [undefined]) => ResultPromise<undefined, never>>(
-      ResultPromise.fromFunction(async (x: undefined) => ok(x)),
+      ResultPromise.createFunction(async (x: undefined) => ok(x)),
     );
     assertType<(...args: [number]) => ResultPromise<never, number>>(
-      ResultPromise.fromFunction(async (x: number) => err(x)),
+      ResultPromise.createFunction(async (x: number) => err(x)),
     );
     assertType<(...args: [string]) => ResultPromise<never, string>>(
-      ResultPromise.fromFunction(async (x: string) => err(x)),
+      ResultPromise.createFunction(async (x: string) => err(x)),
     );
     assertType<(...args: [boolean]) => ResultPromise<never, boolean>>(
-      ResultPromise.fromFunction(async (x: boolean) => err(x)),
+      ResultPromise.createFunction(async (x: boolean) => err(x)),
     );
     assertType<(...args: [number[]]) => ResultPromise<number[], never>>(
-      ResultPromise.fromFunction(async (x: number[]) => ok(x)),
+      ResultPromise.createFunction(async (x: number[]) => ok(x)),
     );
     assertType<
       (...args: [{ a: number; b: string }]) => ResultPromise<{ a: number; b: string }, never>
-    >(ResultPromise.fromFunction(async (x: { a: number; b: string }) => ok(x)));
+    >(ResultPromise.createFunction(async (x: { a: number; b: string }) => ok(x)));
     assertType<(...args: [symbol]) => ResultPromise<symbol, never>>(
-      ResultPromise.fromFunction(async (x: symbol) => ok(x)),
+      ResultPromise.createFunction(async (x: symbol) => ok(x)),
     );
     assertType<(...args: []) => ResultPromise<string, never>>(
-      ResultPromise.fromFunction(async () => ok("no params")),
+      ResultPromise.createFunction(async () => ok("no params")),
     );
     assertType<(...args: [string]) => ResultPromise<string, string>>(
-      ResultPromise.fromFunction(async (x: string) => (x.length > 0 ? ok(x) : err("empty"))),
+      ResultPromise.createFunction(async (x: string) => (x.length > 0 ? ok(x) : err("empty"))),
     );
   });
 
   describe(".andErr", () => {
     assertType<ResultPromise<string | number, never>>(
-      ResultPromise.fromFunction(async (x: string) => ok(x))("test").andErr(() => ok(42)),
+      ResultPromise.createFunction(async (x: string) => ok(x))("test").andErr(() => ok(42)),
     );
     assertType<ResultPromise<string, string>>(
-      ResultPromise.fromFunction(async (x: string) => ok(x))("test").andErr(() => err("error")),
+      ResultPromise.createFunction(async (x: string) => ok(x))("test").andErr(() => err("error")),
     );
     assertType<ResultPromise<number, never>>(
-      ResultPromise.fromFunction(async (x: string) => err(x))("test").andErr(() => ok(42)),
+      ResultPromise.createFunction(async (x: string) => err(x))("test").andErr(() => ok(42)),
     );
     assertType<ResultPromise<never, number>>(
-      ResultPromise.fromFunction(async (x: string) => err(x))("test").andErr(() => err(42)),
+      ResultPromise.createFunction(async (x: string) => err(x))("test").andErr(() => err(42)),
     );
   });
 
   describe(".mapErr", () => {
     assertType<ResultPromise<string, string>>(
-      ResultPromise.fromFunction(async (x: string) => ok(x))("test").mapErr(() => "mapped"),
+      ResultPromise.createFunction(async (x: string) => ok(x))("test").mapErr(() => "mapped"),
     );
     assertType<ResultPromise<string, number>>(
-      ResultPromise.fromFunction(async (x: string) => ok(x))("test").mapErr(() => 42),
+      ResultPromise.createFunction(async (x: string) => ok(x))("test").mapErr(() => 42),
     );
     assertType<ResultPromise<never, number>>(
-      ResultPromise.fromFunction(async (x: string) => err(x))("test").mapErr(() => 42),
+      ResultPromise.createFunction(async (x: string) => err(x))("test").mapErr(() => 42),
     );
     assertType<ResultPromise<never, string>>(
-      ResultPromise.fromFunction(async (x: string) => err(x))("test").mapErr(() => "mapped"),
+      ResultPromise.createFunction(async (x: string) => err(x))("test").mapErr(() => "mapped"),
     );
   });
 
   describe(".tapErr", () => {
     assertType<ResultPromise<string, never>>(
-      ResultPromise.fromFunction(async (x: string) => ok(x))("test").tapErr(() => {}),
+      ResultPromise.createFunction(async (x: string) => ok(x))("test").tapErr(() => {}),
     );
     assertType<ResultPromise<string, never>>(
-      ResultPromise.fromFunction(async (x: string) => ok(x))("test").tapErr(() => {}),
+      ResultPromise.createFunction(async (x: string) => ok(x))("test").tapErr(() => {}),
     );
     assertType<ResultPromise<never, string>>(
-      ResultPromise.fromFunction(async (x: string) => err(x))("test").tapErr(() => {}),
+      ResultPromise.createFunction(async (x: string) => err(x))("test").tapErr(() => {}),
     );
     assertType<ResultPromise<never, string>>(
-      ResultPromise.fromFunction(async (x: string) => err(x))("test").tapErr(() => {}),
+      ResultPromise.createFunction(async (x: string) => err(x))("test").tapErr(() => {}),
     );
   });
 
   describe(".and", () => {
     assertType<ResultPromise<number, never>>(
-      ResultPromise.fromFunction(async (x: string) => ok(x))("test").and((val) => ok(val.length)),
+      ResultPromise.createFunction(async (x: string) => ok(x))("test").and((val) => ok(val.length)),
     );
     assertType<ResultPromise<never, string>>(
-      ResultPromise.fromFunction(async (x: string) => ok(x))("test").and((val) => err(val)),
+      ResultPromise.createFunction(async (x: string) => ok(x))("test").and((val) => err(val)),
     );
     assertType<ResultPromise<never, string>>(
       // @ts-expect-error val is of type never
-      ResultPromise.fromFunction(async (x: string) => err(x))("test").and((val) => ok(val.length)),
+      ResultPromise.createFunction(async (x: string) => err(x))("test").and((val) => ok(val.length)),
     );
     assertType<ResultPromise<never, string>>(
-      ResultPromise.fromFunction(async (x: string) => err(x))("test").and((val) => err(val)),
+      ResultPromise.createFunction(async (x: string) => err(x))("test").and((val) => err(val)),
     );
   });
 
   describe(".map", () => {
     assertType<ResultPromise<number, never>>(
-      ResultPromise.fromFunction(async (x: string) => ok(x))("test").map((val) => val.length),
+      ResultPromise.createFunction(async (x: string) => ok(x))("test").map((val) => val.length),
     );
     assertType<ResultPromise<string, never>>(
-      ResultPromise.fromFunction(async (x: string) => ok(x))("test").map((val) =>
+      ResultPromise.createFunction(async (x: string) => ok(x))("test").map((val) =>
         val.toUpperCase(),
       ),
     );
     assertType<ResultPromise<never, string>>(
       // @ts-expect-error val is of type never
-      ResultPromise.fromFunction(async (x: string) => err(x))("test").map((val) => val.length),
+      ResultPromise.createFunction(async (x: string) => err(x))("test").map((val) => val.length),
     );
     assertType<ResultPromise<never, string>>(
-      ResultPromise.fromFunction(async (x: string) => err(x))("test").map((val) => val),
+      ResultPromise.createFunction(async (x: string) => err(x))("test").map((val) => val),
     );
   });
 
   describe(".tap", () => {
     assertType<ResultPromise<string, never>>(
-      ResultPromise.fromFunction(async (x: string) => ok(x))("test").tap(() => {}),
+      ResultPromise.createFunction(async (x: string) => ok(x))("test").tap(() => {}),
     );
     assertType<ResultPromise<string, never>>(
-      ResultPromise.fromFunction(async (x: string) => ok(x))("test").tap(() => {}),
+      ResultPromise.createFunction(async (x: string) => ok(x))("test").tap(() => {}),
     );
     assertType<ResultPromise<never, string>>(
-      ResultPromise.fromFunction(async (x: string) => err(x))("test").tap(() => {}),
+      ResultPromise.createFunction(async (x: string) => err(x))("test").tap(() => {}),
     );
     assertType<ResultPromise<never, string>>(
-      ResultPromise.fromFunction(async (x: string) => err(x))("test").tap(() => {}),
+      ResultPromise.createFunction(async (x: string) => err(x))("test").tap(() => {}),
     );
   });
 
   describe(".attempt", () => {
     assertType<ResultPromise<number, Error>>(
-      ResultPromise.fromFunction(async (x: string) => ok(x))("test").attempt(() => 42),
+      ResultPromise.createFunction(async (x: string) => ok(x))("test").attempt(() => 42),
     );
     assertType<ResultPromise<string, Error>>(
-      ResultPromise.fromFunction(async (x: string) => ok(x))("test").attempt(() => {
+      ResultPromise.createFunction(async (x: string) => ok(x))("test").attempt(() => {
         throw new Error("test");
       }),
     );
     assertType<ResultPromise<boolean, Error>>(
-      ResultPromise.fromFunction(async (x: string) => ok(x))("test").attempt(() => true),
+      ResultPromise.createFunction(async (x: string) => ok(x))("test").attempt(() => true),
     );
     assertType<ResultPromise<number[], Error>>(
-      ResultPromise.fromFunction(async (x: string) => ok(x))("test").attempt(() => [1, 2, 3]),
+      ResultPromise.createFunction(async (x: string) => ok(x))("test").attempt(() => [1, 2, 3]),
     );
     assertType<ResultPromise<{ b: number }, Error>>(
-      ResultPromise.fromFunction(async (x: string) => ok(x))("test").attempt(() => ({ b: 2 })),
+      ResultPromise.createFunction(async (x: string) => ok(x))("test").attempt(() => ({ b: 2 })),
     );
     assertType<ResultPromise<number, string | Error>>(
-      ResultPromise.fromFunction(async (x: string) => err(x))("test").attempt(() => 42),
+      ResultPromise.createFunction(async (x: string) => err(x))("test").attempt(() => 42),
     );
     assertType<ResultPromise<string, string | Error>>(
-      ResultPromise.fromFunction(async (x: string) => err(x))("test").attempt(() => "world"),
+      ResultPromise.createFunction(async (x: string) => err(x))("test").attempt(() => "world"),
     );
     assertType<ResultPromise<boolean, string | Error>>(
-      ResultPromise.fromFunction(async (x: string) => err(x))("test").attempt(() => true),
+      ResultPromise.createFunction(async (x: string) => err(x))("test").attempt(() => true),
     );
   });
 });

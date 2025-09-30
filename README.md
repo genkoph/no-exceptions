@@ -29,8 +29,8 @@ A minimal and opinionated TypeScript implementation of the Result pattern for ex
     - [`unwrap`](#unwrapvfallback-v-t--v)
     - [`attempt`](#attemptufn-value-t--u-resultu-e--error)
     - [`async`](#async-resultpromiset-e)
-    - [`ResultPromise.fromPromise`](#resultpromisefrompromiset-eresult-promiseresultt-e-resultpromiset-e)
-    - [`ResultPromise.fromFunction`](#resultpromisefromfunctiont-efn-args-any--promiseresultt-e-args-any--resultpromiset-e)
+    - [`ResultPromise.create`](#resultpromisecreatet-eresult-promiseresultt-e-resultpromiset-e)
+    - [`ResultPromise.createFunction`](#resultpromisecreatefunctiont-efn-args-any--promiseresultt-e-args-any--resultpromiset-e)
 - [License](#license)
 
 ## Description
@@ -301,7 +301,7 @@ const asyncResult = result.async
 // asyncResult: ResultPromise<any, Error>
 ```
 
-#### `ResultPromise.fromPromise<T, E>(result: Promise<Result<T, E>>): ResultPromise<T, E>`
+#### `ResultPromise.create<T, E>(result: Promise<Result<T, E>>): ResultPromise<T, E>`
 
 Creates a ResultPromise from a Promise that resolves to a Result.
 
@@ -309,11 +309,11 @@ Creates a ResultPromise from a Promise that resolves to a Result.
 const promise = fetch("/api/data").then((response) =>
   response.ok ? ok(response) : err("Request failed"),
 );
-const resultPromise = ResultPromise.fromPromise(promise);
+const resultPromise = ResultPromise.create(promise);
 // resultPromise: ResultPromise<Response, string>
 ```
 
-#### `ResultPromise.fromFunction<T, E>(fn: (...args: any[]) => Promise<Result<T, E>>): (...args: any[]) => ResultPromise<T, E>`
+#### `ResultPromise.createFunction<T, E>(fn: (...args: any[]) => Promise<Result<T, E>>): (...args: any[]) => ResultPromise<T, E>`
 
 Utility for creating async Result functions.
 
@@ -323,7 +323,7 @@ const asyncFn = async (id: number) => {
   return response.ok ? ok(await response.json()) : err("Not found");
 };
 
-const wrappedFn = ResultPromise.fromFunction(asyncFn);
+const wrappedFn = ResultPromise.createFunction(asyncFn);
 const result = wrappedFn(123);
 // result: ResultPromise<User, string>
 ```

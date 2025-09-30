@@ -320,12 +320,12 @@ describe("Err", () => {
   });
 });
 
-describe("ResultPromise.fromPromise", () => {
+describe("ResultPromise.create", () => {
   describe("instantiation", () => {
     it.each(values)(
-      "ResultPromise.fromPromise('%s') returns Ok with correct value",
+      "ResultPromise.create('%s') returns Ok with correct value",
       async (value) => {
-        const result = ResultPromise.fromPromise(Promise.resolve(ok(value)));
+        const result = ResultPromise.create(Promise.resolve(ok(value)));
 
         expect(result).toBeInstanceOf(ResultPromise);
 
@@ -340,9 +340,9 @@ describe("ResultPromise.fromPromise", () => {
     );
 
     it.each(values)(
-      "ResultPromise.fromPromise('%s') returns Err with correct value",
+      "ResultPromise.create('%s') returns Err with correct value",
       async (value) => {
-        const result = ResultPromise.fromPromise(Promise.resolve(err(value)));
+        const result = ResultPromise.create(Promise.resolve(err(value)));
 
         expect(result).toBeInstanceOf(ResultPromise);
 
@@ -359,9 +359,9 @@ describe("ResultPromise.fromPromise", () => {
 
   describe(".and", () => {
     it.each(values)(
-      "ResultPromise.fromPromise(ok('%s')).and() applies function to value",
+      "ResultPromise.create(ok('%s')).and() applies function to value",
       async (value) => {
-        const resultPromise = ResultPromise.fromPromise(Promise.resolve(ok(value))).and((x) =>
+        const resultPromise = ResultPromise.create(Promise.resolve(ok(value))).and((x) =>
           ok(x),
         );
         expect(resultPromise).toBeInstanceOf(ResultPromise);
@@ -375,9 +375,9 @@ describe("ResultPromise.fromPromise", () => {
     );
 
     it.each(values)(
-      "ResultPromise.fromPromise(ok('%s')).and() applies function to value",
+      "ResultPromise.create(ok('%s')).and() applies function to value",
       async (value) => {
-        const resultPromise = ResultPromise.fromPromise(Promise.resolve(ok(value))).and((x) =>
+        const resultPromise = ResultPromise.create(Promise.resolve(ok(value))).and((x) =>
           err(x),
         );
         expect(resultPromise).toBeInstanceOf(ResultPromise);
@@ -391,10 +391,10 @@ describe("ResultPromise.fromPromise", () => {
     );
 
     it.each(values)(
-      "ResultPromise.fromPromise(err('%s')).and() returns original Err unchanged",
+      "ResultPromise.create(err('%s')).and() returns original Err unchanged",
       async (value) => {
         const andFn = vitest.fn();
-        const resultPromise = ResultPromise.fromPromise(Promise.resolve(err(value))).and(andFn);
+        const resultPromise = ResultPromise.create(Promise.resolve(err(value))).and(andFn);
         expect(resultPromise).toBeInstanceOf(ResultPromise);
         const result = await resultPromise;
         expect(result).toBeInstanceOf(Err);
@@ -410,9 +410,9 @@ describe("ResultPromise.fromPromise", () => {
 
   describe(".map", () => {
     it.each(values)(
-      "ResultPromise.fromPromise(ok('%s')).map() applies function to value",
+      "ResultPromise.create(ok('%s')).map() applies function to value",
       async (value) => {
-        const resultPromise = ResultPromise.fromPromise(Promise.resolve(ok(value))).map((x) => x);
+        const resultPromise = ResultPromise.create(Promise.resolve(ok(value))).map((x) => x);
 
         expect(resultPromise).toBeInstanceOf(ResultPromise);
 
@@ -427,10 +427,10 @@ describe("ResultPromise.fromPromise", () => {
     );
 
     it.each(values)(
-      "ResultPromise.fromPromise(err('%s')).map() returns original Err unchanged",
+      "ResultPromise.create(err('%s')).map() returns original Err unchanged",
       async (value) => {
         const mapFn = vitest.fn();
-        const resultPromise = ResultPromise.fromPromise(Promise.resolve(err(value))).map(mapFn);
+        const resultPromise = ResultPromise.create(Promise.resolve(err(value))).map(mapFn);
 
         expect(resultPromise).toBeInstanceOf(ResultPromise);
 
@@ -449,13 +449,13 @@ describe("ResultPromise.fromPromise", () => {
 
   describe(".tap", () => {
     it.each(values)(
-      "ResultPromise.fromPromise(ok('%s')).tap() applies function to value",
+      "ResultPromise.create(ok('%s')).tap() applies function to value",
       async (value) => {
         const tapFn = vitest.fn().mockImplementation(() => {
           throw new Error("hi");
         });
 
-        const resultPromise = ResultPromise.fromPromise(Promise.resolve(ok(value))).tap(tapFn);
+        const resultPromise = ResultPromise.create(Promise.resolve(ok(value))).tap(tapFn);
 
         expect(resultPromise).toBeInstanceOf(ResultPromise);
 
@@ -472,10 +472,10 @@ describe("ResultPromise.fromPromise", () => {
     );
 
     it.each(values)(
-      "ResultPromise.fromPromise(err('%s')).tap() returns original Err unchanged",
+      "ResultPromise.create(err('%s')).tap() returns original Err unchanged",
       async (value) => {
         const tapFn = vitest.fn();
-        const resultPromise = ResultPromise.fromPromise(Promise.resolve(err(value))).tap(tapFn);
+        const resultPromise = ResultPromise.create(Promise.resolve(err(value))).tap(tapFn);
 
         expect(resultPromise).toBeInstanceOf(ResultPromise);
 
@@ -494,10 +494,10 @@ describe("ResultPromise.fromPromise", () => {
 
   describe(".andErr", () => {
     it.each(values)(
-      "ResultPromise.fromPromise(ok('%s')).andErr() returns original Ok unchanged",
+      "ResultPromise.create(ok('%s')).andErr() returns original Ok unchanged",
       async (value) => {
         const orFn = vitest.fn();
-        const resultPromise = ResultPromise.fromPromise(Promise.resolve(ok(value))).andErr(orFn);
+        const resultPromise = ResultPromise.create(Promise.resolve(ok(value))).andErr(orFn);
         expect(resultPromise).toBeInstanceOf(ResultPromise);
         const result = await resultPromise;
         expect(result).toBeInstanceOf(Ok);
@@ -511,9 +511,9 @@ describe("ResultPromise.fromPromise", () => {
     );
 
     it.each(values)(
-      "ResultPromise.fromPromise(err('%s')).andErr() applies function to value",
+      "ResultPromise.create(err('%s')).andErr() applies function to value",
       async (value) => {
-        const resultPromise = ResultPromise.fromPromise(Promise.resolve(err(value))).andErr((x) =>
+        const resultPromise = ResultPromise.create(Promise.resolve(err(value))).andErr((x) =>
           err(x),
         );
         expect(resultPromise).toBeInstanceOf(ResultPromise);
@@ -527,9 +527,9 @@ describe("ResultPromise.fromPromise", () => {
     );
 
     it.each(values)(
-      "ResultPromise.fromPromise(err('%s')).andErr() applies function to value",
+      "ResultPromise.create(err('%s')).andErr() applies function to value",
       async (value) => {
-        const resultPromise = ResultPromise.fromPromise(Promise.resolve(err(value))).andErr((x) =>
+        const resultPromise = ResultPromise.create(Promise.resolve(err(value))).andErr((x) =>
           ok(x),
         );
         expect(resultPromise).toBeInstanceOf(ResultPromise);
@@ -545,10 +545,10 @@ describe("ResultPromise.fromPromise", () => {
 
   describe(".mapErr", () => {
     it.each(values)(
-      "ResultPromise.fromPromise(ok('%s')).mapErr() returns original Ok unchanged",
+      "ResultPromise.create(ok('%s')).mapErr() returns original Ok unchanged",
       async (value) => {
         const orMapFn = vitest.fn();
-        const resultPromise = ResultPromise.fromPromise(Promise.resolve(ok(value))).mapErr(orMapFn);
+        const resultPromise = ResultPromise.create(Promise.resolve(ok(value))).mapErr(orMapFn);
 
         expect(resultPromise).toBeInstanceOf(ResultPromise);
 
@@ -565,9 +565,9 @@ describe("ResultPromise.fromPromise", () => {
     );
 
     it.each(values)(
-      "ResultPromise.fromPromise(err('%s')).mapErr() applies function to value",
+      "ResultPromise.create(err('%s')).mapErr() applies function to value",
       async (value) => {
-        const resultPromise = ResultPromise.fromPromise(Promise.resolve(err(value))).mapErr(
+        const resultPromise = ResultPromise.create(Promise.resolve(err(value))).mapErr(
           (x) => x,
         );
 
@@ -586,10 +586,10 @@ describe("ResultPromise.fromPromise", () => {
 
   describe(".tapErr", () => {
     it.each(values)(
-      "ResultPromise.fromPromise(ok('%s')).tapErr() returns original Ok unchanged",
+      "ResultPromise.create(ok('%s')).tapErr() returns original Ok unchanged",
       async (value) => {
         const tapErrFn = vitest.fn();
-        const resultPromise = ResultPromise.fromPromise(Promise.resolve(ok(value))).tapErr(
+        const resultPromise = ResultPromise.create(Promise.resolve(ok(value))).tapErr(
           tapErrFn,
         );
 
@@ -608,12 +608,12 @@ describe("ResultPromise.fromPromise", () => {
     );
 
     it.each(values)(
-      "ResultPromise.fromPromise(err('%s')).tapErr() applies function to value",
+      "ResultPromise.create(err('%s')).tapErr() applies function to value",
       async (value) => {
         const tapErrFn = vitest.fn().mockImplementation(() => {
           throw new Error("hi");
         });
-        const resultPromise = ResultPromise.fromPromise(Promise.resolve(err(value))).tapErr(
+        const resultPromise = ResultPromise.create(Promise.resolve(err(value))).tapErr(
           tapErrFn,
         );
 
@@ -634,9 +634,9 @@ describe("ResultPromise.fromPromise", () => {
 
   describe(".attempt", () => {
     it.each(values)(
-      "ResultPromise.fromPromise(ok('%s')).attempt() applies function to value successfully",
+      "ResultPromise.create(ok('%s')).attempt() applies function to value successfully",
       async (value) => {
-        const resultPromise = ResultPromise.fromPromise(Promise.resolve(ok(value))).attempt(
+        const resultPromise = ResultPromise.create(Promise.resolve(ok(value))).attempt(
           (x) => x,
         );
 
@@ -653,9 +653,9 @@ describe("ResultPromise.fromPromise", () => {
     );
 
     it.each(values)(
-      "ResultPromise.fromPromise(ok('%s')).attempt() catches thrown errors",
+      "ResultPromise.create(ok('%s')).attempt() catches thrown errors",
       async (value) => {
-        const resultPromise = ResultPromise.fromPromise(Promise.resolve(ok(value))).attempt((x) => {
+        const resultPromise = ResultPromise.create(Promise.resolve(ok(value))).attempt((x) => {
           throw new Error(`Error processing ${String(x)}`);
         });
 
@@ -675,9 +675,9 @@ describe("ResultPromise.fromPromise", () => {
     );
 
     it.each(values)(
-      "ResultPromise.fromPromise(ok('%s')).attempt() catches async thrown errors",
+      "ResultPromise.create(ok('%s')).attempt() catches async thrown errors",
       async (value) => {
-        const resultPromise = ResultPromise.fromPromise(Promise.resolve(ok(value))).attempt(
+        const resultPromise = ResultPromise.create(Promise.resolve(ok(value))).attempt(
           async (x) => {
             throw new Error(`Async error processing ${String(x)}`);
           },
@@ -701,9 +701,9 @@ describe("ResultPromise.fromPromise", () => {
     );
 
     it.each(values)(
-      "ResultPromise.fromPromise(ok('%s')).attempt() transforms value successfully",
+      "ResultPromise.create(ok('%s')).attempt() transforms value successfully",
       async (value) => {
-        const resultPromise = ResultPromise.fromPromise(Promise.resolve(ok(value))).attempt(
+        const resultPromise = ResultPromise.create(Promise.resolve(ok(value))).attempt(
           (x) => `transformed: ${String(x)}`,
         );
 
@@ -720,10 +720,10 @@ describe("ResultPromise.fromPromise", () => {
     );
 
     it.each(values)(
-      "ResultPromise.fromPromise(err('%s')).attempt() returns original Err unchanged",
+      "ResultPromise.create(err('%s')).attempt() returns original Err unchanged",
       async (value) => {
         const attemptFn = vitest.fn();
-        const resultPromise = ResultPromise.fromPromise(Promise.resolve(err(value))).attempt(
+        const resultPromise = ResultPromise.create(Promise.resolve(err(value))).attempt(
           attemptFn,
         );
 
@@ -743,12 +743,12 @@ describe("ResultPromise.fromPromise", () => {
   });
 });
 
-describe("ResultPromise.fromFunction", () => {
+describe("ResultPromise.createFunction", () => {
   describe("instantiation", () => {
     it.each(values)(
-      "ResultPromise.fromFunction returns function that returns Ok with correct value",
+      "ResultPromise.createFunction returns function that returns Ok with correct value",
       async (value) => {
-        const fn = ResultPromise.fromFunction(async (x: typeof value) => {
+        const fn = ResultPromise.createFunction(async (x: typeof value) => {
           return ok(x);
         });
 
@@ -767,9 +767,9 @@ describe("ResultPromise.fromFunction", () => {
     );
 
     it.each(values)(
-      "ResultPromise.fromFunction returns function that returns Err with correct value",
+      "ResultPromise.createFunction returns function that returns Err with correct value",
       async (value) => {
-        const fn = ResultPromise.fromFunction(async (x: typeof value) => {
+        const fn = ResultPromise.createFunction(async (x: typeof value) => {
           return err(x);
         });
 
@@ -790,10 +790,10 @@ describe("ResultPromise.fromFunction", () => {
 
   describe(".andErr", () => {
     it.each(values)(
-      "ResultPromise.fromFunction with .andErr() returns original Ok unchanged",
+      "ResultPromise.createFunction with .andErr() returns original Ok unchanged",
       async (value) => {
         const andErrFn = vitest.fn();
-        const fn = ResultPromise.fromFunction(async (x: typeof value) => {
+        const fn = ResultPromise.createFunction(async (x: typeof value) => {
           return ok(x);
         });
 
@@ -812,9 +812,9 @@ describe("ResultPromise.fromFunction", () => {
     );
 
     it.each(values)(
-      "ResultPromise.fromFunction with .andErr() applies function to error",
+      "ResultPromise.createFunction with .andErr() applies function to error",
       async (value) => {
-        const fn = ResultPromise.fromFunction(async (x: typeof value) => {
+        const fn = ResultPromise.createFunction(async (x: typeof value) => {
           return err(x);
         });
 
@@ -831,9 +831,9 @@ describe("ResultPromise.fromFunction", () => {
     );
 
     it.each(values)(
-      "ResultPromise.fromFunction with .andErr() transforms error to success",
+      "ResultPromise.createFunction with .andErr() transforms error to success",
       async (value) => {
-        const fn = ResultPromise.fromFunction(async (x: typeof value) => {
+        const fn = ResultPromise.createFunction(async (x: typeof value) => {
           return err(x);
         });
 
@@ -852,9 +852,9 @@ describe("ResultPromise.fromFunction", () => {
 
   describe(".and", () => {
     it.each(values)(
-      "ResultPromise.fromFunction with .and() applies function to value",
+      "ResultPromise.createFunction with .and() applies function to value",
       async (value) => {
-        const fn = ResultPromise.fromFunction(async (x: typeof value) => {
+        const fn = ResultPromise.createFunction(async (x: typeof value) => {
           return ok(x);
         });
 
@@ -871,9 +871,9 @@ describe("ResultPromise.fromFunction", () => {
     );
 
     it.each(values)(
-      "ResultPromise.fromFunction with .and() transforms success to error",
+      "ResultPromise.createFunction with .and() transforms success to error",
       async (value) => {
-        const fn = ResultPromise.fromFunction(async (x: typeof value) => {
+        const fn = ResultPromise.createFunction(async (x: typeof value) => {
           return ok(x);
         });
 
@@ -890,10 +890,10 @@ describe("ResultPromise.fromFunction", () => {
     );
 
     it.each(values)(
-      "ResultPromise.fromFunction with .and() returns original error unchanged",
+      "ResultPromise.createFunction with .and() returns original error unchanged",
       async (value) => {
         const andFn = vitest.fn();
-        const fn = ResultPromise.fromFunction(async (x: typeof value) => {
+        const fn = ResultPromise.createFunction(async (x: typeof value) => {
           return err(x);
         });
 
@@ -914,9 +914,9 @@ describe("ResultPromise.fromFunction", () => {
 
   describe(".attempt", () => {
     it.each(values)(
-      "ResultPromise.fromFunction with .attempt() applies function to value successfully",
+      "ResultPromise.createFunction with .attempt() applies function to value successfully",
       async (value) => {
-        const fn = ResultPromise.fromFunction(async (x: typeof value) => {
+        const fn = ResultPromise.createFunction(async (x: typeof value) => {
           return ok(x);
         });
 
@@ -933,9 +933,9 @@ describe("ResultPromise.fromFunction", () => {
     );
 
     it.each(values)(
-      "ResultPromise.fromFunction with .attempt() catches thrown errors",
+      "ResultPromise.createFunction with .attempt() catches thrown errors",
       async (value) => {
-        const fn = ResultPromise.fromFunction(async (x: typeof value) => {
+        const fn = ResultPromise.createFunction(async (x: typeof value) => {
           return ok(x);
         });
 
@@ -957,9 +957,9 @@ describe("ResultPromise.fromFunction", () => {
     );
 
     it.each(values)(
-      "ResultPromise.fromFunction with .attempt() catches async thrown errors",
+      "ResultPromise.createFunction with .attempt() catches async thrown errors",
       async (value) => {
-        const fn = ResultPromise.fromFunction(async (x: typeof value) => {
+        const fn = ResultPromise.createFunction(async (x: typeof value) => {
           return ok(x);
         });
 
@@ -983,10 +983,10 @@ describe("ResultPromise.fromFunction", () => {
     );
 
     it.each(values)(
-      "ResultPromise.fromFunction with .attempt() returns original error unchanged",
+      "ResultPromise.createFunction with .attempt() returns original error unchanged",
       async (value) => {
         const attemptFn = vitest.fn();
-        const fn = ResultPromise.fromFunction(async (x: typeof value) => {
+        const fn = ResultPromise.createFunction(async (x: typeof value) => {
           return err(x);
         });
 

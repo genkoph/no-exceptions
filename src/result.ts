@@ -184,7 +184,7 @@ export class Ok<T = unknown, E = never> implements ResultCore<T, E> {
   }
 
   get async(): ResultPromise<T, E> {
-    return ResultPromise.fromPromise(Promise.resolve(ok(this.value)));
+    return ResultPromise.create(Promise.resolve(ok(this.value)));
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -249,7 +249,7 @@ export class Err<T = never, E = unknown> implements ResultCore<T, E> {
   }
 
   get async(): ResultPromise<T, E> {
-    return ResultPromise.fromPromise(Promise.resolve(err(this.error)));
+    return ResultPromise.create(Promise.resolve(err(this.error)));
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -423,7 +423,7 @@ export class ResultPromise<T = never, E = never>
    * @param result The Result to wrap, or a Promise that resolves to a Result
    * @returns A ResultPromise wrapping the given Result
    */
-  static fromPromise<T = never, E = never>(result: Promise<Result<T, E>>): ResultPromise<T, E> {
+  static create<T = never, E = never>(result: Promise<Result<T, E>>): ResultPromise<T, E> {
     return new ResultPromise(result);
   }
 
@@ -432,11 +432,11 @@ export class ResultPromise<T = never, E = never>
    * @param fn An async function that returns a Promise resolving to a Result
    * @returns A new function with the same signature that returns a ResultPromise
    */
-  static fromFunction<T = never, E = never>(
-    fn: (...args: any[]) => Promise<Result<T, E>>,
-  ): (...args: any[]) => ResultPromise<T, E> {
+  static createFunction<T = never, E = never, Args extends unknown[] = unknown[]>(
+    fn: (...args: Args) => Promise<Result<T, E>>,
+  ): (...args: Args) => ResultPromise<T, E> {
     return (...args) => {
-      return ResultPromise.fromPromise(fn(...args));
+      return ResultPromise.create(fn(...args));
     };
   }
 }

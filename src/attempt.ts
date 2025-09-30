@@ -7,7 +7,7 @@ type ThunkResult<T extends SyncThunk | AsyncThunk, V = AnyToUnknown<ReturnType<T
 const handleValue = <T>(value: T) => ok(value);
 const handleError = <E>(error: E) => err(new Error("Unknown error occurred", { cause: error }));
 const handlePromise = <T>(promise: Promise<T>) =>
-  ResultPromise.fromPromise(promise.then(handleValue).catch(handleError));
+  ResultPromise.create(promise.then(handleValue).catch(handleError));
 
 /**
  * A synchronous function that returns a value.
